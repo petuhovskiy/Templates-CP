@@ -130,7 +130,7 @@ ld findY (ln t, ld x) {
 }
 
 int ptRels (ln l, pt p) {
-    ld f = l.a * p.x + l.b * p.y - l.c;
+    ld f = l.a * p.x + l.b * p.y + l.c;
     if (eq(0, f)) return 0;
     if (f > 0) return 1;
     return -1;
@@ -235,6 +235,6 @@ sg intersect2 (sg x, sg y) {
 }
 
 int main() {
-    
+
     return 0;
 }
