@@ -59,7 +59,7 @@ sg msg (pt a, pt b) {
     obj.b = b;
     return obj;
 }
-//operators tricks
+//io tricks
 ostream &operator<<(ostream &os, pt const &p) {
     return os << p.x << " " << p.y;
 }
@@ -70,6 +70,12 @@ istream &operator>>(istream &is, pt &p) {
 
 istream &operator>>(istream &is, ln &l) {
     return is >> l.a >> l.b >> l.c;
+}
+
+void ny (bool x) {
+    if (x) cout << "YES";
+    else cout << "NO";
+    exit(0);
 }
 //consts
 const long double ldINF = 1e+018;
@@ -93,49 +99,13 @@ bool eq (pt x, pt y) {
 bool eq (sg x, sg y) {
     return eq(x.a, y.a) && eq(x.b, y.b);
 }
-//line algos
-ln makeln (pt p1, pt p2) {
-    ln t;
-    if (!eq(p1.y, p2.y)) {
-        t.a = 1;
-        t.b = (t.a * (p1.x - p2.x)) / (p2.y - p1.y);
-    } else {
-        t.b = 1;
-        t.a = (t.b * (p2.y - p1.y)) / (p1.x - p2.x);
-    }
-    t.c = -(t.a * p1.x + t.b * p1.y);
-    return t;
-}
-
-pt intersect (ln t1, ln t2) {
-    pt r;
-    if (eq(t2.a * t1.b - t2.b * t1.a, 0)) return Npt;
-    if (eq(t1.a, 0)) swap(t1, t2);
-    r.y = (t1.a * t2.c - t1.c * t2.a) / (t2.a * t1.b - t2.b * t1.a);
-    r.x = (t1.b * r.y + t1.c) / (-t1.a);
-    return r;
-}
-
-ln moveToPt (ln l, pt p) { //parallel line trough pt
-    l.c = -(l.a * p.x + l.b * p.y);
-    return l;
-}
-
-ld findX (ln t, ld y) {
-    return (-t.b * y - t.c) / t.a;
-}
-
-ld findY (ln t, ld x) {
-    return (-t.a * x - t.c) / t.b;
-}
-
-int ptRels (ln l, pt p) {
-    ld f = l.a * p.x + l.b * p.y + l.c;
-    if (eq(0, f)) return 0;
-    if (f > 0) return 1;
+//Basic algos
+int fsign (ld x) {
+    if (eq(x, 0)) return 0;
+    if (x > 0) return 1;
     return -1;
 }
-//Basic algos
+
 pld solveSquare (ld a, ld b, ld c) { //ax^2 + bx + c = 0
     if (eq(a, 0)) {
         if (eq(b, 0)) return Npld;
@@ -172,9 +142,61 @@ bool into (ld x, ld l, ld r) {
 ld dist (pt p1, pt p2) { //Pythagoras
     return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
 }
+
+ld multVect (pt s, pt v1, pt v2) { //v1 * v2
+    return (v2.x - s.x) * (v1.y - s.y) - (v2.y - s.y) * (v1.x - s.x);
+}
+//line algos
+ln makeln (pt p1, pt p2) {
+    ln t;
+    if (!eq(p1.y, p2.y)) {
+        t.a = 1;
+        t.b = (t.a * (p1.x - p2.x)) / (p2.y - p1.y);
+    } else {
+        t.b = 1;
+        t.a = (t.b * (p2.y - p1.y)) / (p1.x - p2.x);
+    }
+    t.c = -(t.a * p1.x + t.b * p1.y);
+    return t;
+}
+
+pt intersect (ln t1, ln t2) {
+    pt r;
+    if (eq(t2.a * t1.b - t2.b * t1.a, 0)) return Npt;
+    if (eq(t1.a, 0)) swap(t1, t2);
+    r.y = (t1.a * t2.c - t1.c * t2.a) / (t2.a * t1.b - t2.b * t1.a);
+    r.x = (t1.b * r.y + t1.c) / (-t1.a);
+    return r;
+}
+
+pt perp (ln l, pt p) { //perpendicular
+    ld t = -(l.a * p.x + l.b * p.y + l.c) / (l.a * l.a + l.b * l.b);
+    return mpt(p.x + t * l.a, p.y + t * l.b);
+}
+
+ld dist (ln l, pt p) { //perpendicular
+    return fabs(l.a * p.x + l.b * p.y + l.c) / sqrt(l.a * l.a + l.b * l.b);
+}
+
+ln moveToPt (ln l, pt p) { //parallel line trough pt
+    l.c = -(l.a * p.x + l.b * p.y);
+    return l;
+}
+
+ld findX (ln t, ld y) {
+    return (-t.b * y - t.c) / t.a;
+}
+
+ld findY (ln t, ld x) {
+    return (-t.a * x - t.c) / t.b;
+}
+
+int ptRels (ln l, pt p) {
+    return fsign(l.a * p.x + l.b * p.y + l.c);
+}
 //Areas
 ld triangleArea (pt p1, pt p2, pt p3) {
-    return fabs((p3.x - p2.x) * (p1.y - p2.y) - (p3.y - p2.y) * (p1.x - p2.x)) / 2;
+    return fabs(multVect(p1, p2, p3)) / 2;
 }
 //segs algos
 ln makeln (sg s) {
@@ -182,15 +204,7 @@ ln makeln (sg s) {
 }
 
 int ptRels (sg s, pt p) {
-    ld f = (p.x - s.a.x) * (s.b.y - s.a.y) - (p.y - s.a.y) * (s.b.x - s.a.x);
-    if (eq(f, 0)) return 0;
-    if (f > 0) return 1;
-    return -1;
-}
-
-sg perBis (pt p1, pt p2) { //perpendicular bisector
-    swap(p1.x, p2.x);
-    return msg(p1, p2);
+    return fsign(multVect(s.a, s.b, p));
 }
 
 pt intersect (sg s, pt p) {
@@ -234,6 +248,31 @@ sg intersect2 (sg x, sg y) {
     return Nsg;
 }
 
+ld dist (sg s, pt p) {
+    pt x = perp(makeln(s), p);
+    if (eq(intersect(s, x), Npt))
+        return min(dist(s.a, p), dist(s.b, p));
+    return dist(x, p);
+}
+//Rays
+bool isOnRay (pt s, pt d, pt t) {
+    return eq(s, t) || !ptRels(msg(s, d), t) && fsign(d.x - s.x) == fsign(t.x - s.x) && fsign(d.y - s.y) == fsign(t.y - s.y);
+}
+
+ld distRay (pt s, pt d, pt t) {
+    pt px = perp(makeln(s, d), t);
+    if (!isOnRay(s, d, px)) px = s;
+    return dist(t, px);
+}
+
+ld fangle (pt p) {
+    ld a = atan(p.y / p.x);
+    if (p.y == 0 && p.x > 0) return 0;
+    if (p.x < 0) return M_PI + a;
+    if (p.y > 0) return a;
+    return 2 * M_PI + a;
+
+}
 int main() {
 
     return 0;
