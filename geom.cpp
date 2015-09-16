@@ -12,6 +12,10 @@
 #include <iomanip>
 #include <cmath>
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 using namespace std;
 
 #define pb push_back
@@ -20,6 +24,7 @@ using namespace std;
 #define F first
 
 //basic typedef
+typedef long long ll;
 typedef long double ld;
 typedef pair<ld, ld> pld;
 //structs
@@ -78,8 +83,8 @@ void ny (bool x) {
     exit(0);
 }
 //consts
-const long double ldINF = 1e+018;
-const long double EPS = 1e-009;
+const ld ldINF = 1e+018;
+const ld EPS = 1e-009;
 const pt Npt = mpt(ldINF, ldINF);
 const pld Npld = mp(ldINF, ldINF);
 const sg Nsg = msg(Npt, Npt);
@@ -273,6 +278,33 @@ ld fangle (pt p) {
     return 2 * M_PI + a;
 
 }
+//Polygons
+ld polygonArea (pl p) {
+    ld s = 0;
+    pt last = p.back();
+    for (int i = 0; i < p.size(); i++) {
+        s += (p[i].y + last.y) * (p[i].x - last.x);
+        last = p[i];
+    }
+    return fabs(s / 2);
+}
+
+ll fpts (pl p) {
+    pt last = p.back();
+    ll pts = 0;
+    for (int i = 0; i < p.size(); i++) {
+        ll x = round(fabs(p[i].x - last.x));
+        ll y = round(fabs(p[i].y - last.y));
+        pts += __gcd(x, y);
+        last = p[i];
+    }
+    return pts;
+}
+
+ll pickTheorem (pl p) {
+    return (round(polygonArea(p)) * 2 - fpts(p) + 2) / 2;
+}
+
 int main() {
 
     return 0;
