@@ -40,6 +40,11 @@ struct sg{ //segment
     pt a, b;
 };
 
+struct cr{ //circle
+    pt c;
+    ld r;
+};
+
 typedef vector<pt> pl; //polygon
 
 //constructors
@@ -64,9 +69,20 @@ sg msg (pt a, pt b) {
     obj.b = b;
     return obj;
 }
+
+cr mcr (pt c, ld r) {
+    cr t;
+    t.c = c;
+    t.r = r;
+    return t;
+}
 //io tricks
 ostream &operator<<(ostream &os, pt const &p) {
     return os << p.x << " " << p.y;
+}
+
+ostream &operator<<(ostream &os, sg const &s) {
+    return os << "{(" << s.a << ") (" << s.b << ")}";
 }
 
 istream &operator>>(istream &is, pt &p) {
@@ -103,6 +119,14 @@ bool eq (pt x, pt y) {
 
 bool eq (sg x, sg y) {
     return eq(x.a, y.a) && eq(x.b, y.b);
+}
+
+bool eq (cr x, cr y) {
+    return eq(x.c, y.c) && eq(x.r, y.r);
+}
+
+bool eq (pld x, pld y) {
+    return eq(x.F, y.F) && eq(x.S, y.S);
 }
 //Basic algos
 int fsign (ld x) {
@@ -276,7 +300,15 @@ ld fangle (pt p) {
     if (p.x < 0) return M_PI + a;
     if (p.y > 0) return a;
     return 2 * M_PI + a;
+}
 
+ld fangle (pt p, pt a, pt b) {
+    a.x -= p.x;
+    a.y -= p.y;
+    b.x -= p.x;
+    b.y -= p.y;
+    ld x = fabs(fangle(a) - fangle(b));
+    return min(x, 2 * M_PI - x);
 }
 //Polygons
 ld polygonArea (pl p) {
@@ -303,6 +335,51 @@ ll fpts (pl p) {
 
 ll pickTheorem (pl p) {
     return (round(polygonArea(p)) * 2 - fpts(p) + 2) / 2;
+}
+//Circles
+sg intersect(cr c, ln l) {
+    if (!eq(l.a, 0)) {
+        ld ta, tb, tc;
+        ta = (l.b * l.b / l.a / l.a) + 1;
+        tb = 2 * l.b * l.c / l.a / l.a;
+        tb += 2 * l.b * c.c.x / l.a;
+        tb -= 2 * c.c.y;
+        tc = c.c.x * c.c.x;
+        tc += c.c.y * c.c.y;
+        tc += 2 * l.c * c.c.x / l.a;
+        tc += l.c * l.c / l.a / l.a;
+        tc -= c.r * c.r;
+        pld ans = solveSquare(ta, tb, tc);
+        if (eq(ans, Npld)) return Nsg;
+        ld x0 = (-l.b * ans.F - l.c) / l.a;
+        ld x1 = (-l.b * ans.S - l.c) / l.a;
+        return msg(mpt(x0, ans.F), mpt(x1, ans.S));
+    }
+    ld y = (-l.c) / l.b;
+    ld ta, tb, tc;
+    ta = 1;
+    tb = -2 * c.c.x;
+    tc = c.c.x * c.c.x + y * y + c.c.y * c.c.y - 2 * y * c.c.y - c.r * c.r;
+    pld ans = solveSquare(ta, tb, tc);
+    if (eq(ans, Npld)) return Nsg;
+    return msg(mpt(ans.F, y), mpt(ans.S, y));
+}
+
+sg intersect (cr c1, cr c2) {
+    return intersect(c1, mln(-2 * c2.c.x, -2 * c2.c.y,
+                             c2.c.x * c2.c.x + c2.c.y * c2.c.y + c1.r * c1.r - c2.r * c2.r));
+}
+//Very specific algos
+ln rot90 (pt p1, pt p2, pt p) {
+    ln l = makeln(p1, p2);
+    l = makeln(mpt(0, 0), mpt(l.a, l.b));
+    return moveToPt(l, p);
+}
+
+pt ptRay (pt p1, pt p2, ld l) {
+    sg s = intersect(mcr(p1, l), makeln(p1, p2));
+    if (isOnRay(p1, p2, s.a)) return s.a;
+    return s.b;
 }
 
 int main() {
