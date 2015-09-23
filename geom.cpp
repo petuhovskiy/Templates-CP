@@ -406,6 +406,8 @@ pl convexHull (pl a) {
 		}
 	}
 	for (int i = down.size() - 2; i > 0; --i) up.pb(down[i]);
+	if (up.size() == 2 && eq(up[0], up[1]))
+        	up.pop_back();
 	return up;
 }
 
