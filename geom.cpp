@@ -381,6 +381,33 @@ pt ptRay (pt p1, pt p2, ld l) {
     if (isOnRay(p1, p2, s.a)) return s.a;
     return s.b;
 }
+//Convex hull
+bool cmp (pt a, pt b) {
+	return a.x < b.x || a.x == b.x && a.y < b.y;
+}
+
+pl convexHull (pl a) {
+	if (a.size() == 1) return a;
+	sort(a.begin(), a.end(), &cmp);
+	sg line = msg(a[0], a.back());
+	pl up, down;
+	up.pb(a[0]);
+	down.pb(a[0]);
+	for (int i = 1; i < a.size(); i++) {
+		if (ptRels(line, a[i]) <= 0) {
+			while (up.size() >= 2 && ptRels(msg(up[up.size() - 2], up.back()), a[i]) <= 0)
+				up.pop_back();
+			up.pb(a[i]);
+		}
+		if (ptRels(line, a[i]) >= 0) {
+			while (down.size() >= 2 && ptRels(msg(down[down.size() - 2], down.back()), a[i]) >= 0)
+				down.pop_back();
+			down.pb(a[i]);
+		}
+	}
+	for (int i = down.size() - 2; i > 0; --i) up.pb(down[i]);
+	return up;
+}
 
 int main() {
 
