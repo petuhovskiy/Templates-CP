@@ -9,28 +9,28 @@ public:
     vector<e> t;
 
 	void combine(e &l, e &r, e &res) {
-		if (l.sz == 0) {
-            res = r;
-            return;
-		}
-		if (r.sz == 0) {
-            res = l;
-            return;
-		}
-        res.sz = l.sz + r.sz;
-        res.ans = l.ans + r.ans;
+	    if (l.sz == 0) {
+                res = r;
+                return;
+	    }
+	    if (r.sz == 0) {
+                res = l;
+                return;
+	    }
+            res.sz = l.sz + r.sz;
+            res.ans = l.ans + r.ans;
 	}
 
 	void combine_left(e &l, e &r) {
-        e res;
-        combine(l, r, res);
-        l = res;
+            e res;
+            combine(l, r, res);
+            l = res;
 	}
 
 	void combine_right(e &l, e &r) {
-        e res;
-        combine(l, r, res);
-        r = res;
+            e res;
+            combine(l, r, res);
+            r = res;
 	}
 
     void build(vector<int> &v) {  // build the tree
