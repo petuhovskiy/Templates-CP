@@ -10,27 +10,27 @@ public:
 
 	void combine(e &l, e &r, e &res) {
 	    if (l.sz == 0) {
-                res = r;
-                return;
+            res = r;
+            return;
 	    }
 	    if (r.sz == 0) {
-                res = l;
-                return;
+            res = l;
+            return;
 	    }
-            res.sz = l.sz + r.sz;
-            res.ans = l.ans + r.ans;
+        res.sz = l.sz + r.sz;
+        res.ans = l.ans + r.ans;
 	}
 
 	void combine_left(e &l, e &r) {
-            e res;
-            combine(l, r, res);
-            l = res;
+        e res;
+        combine(l, r, res);
+        l = res;
 	}
 
 	void combine_right(e &l, e &r) {
-            e res;
-            combine(l, r, res);
-            r = res;
+        e res;
+        combine(l, r, res);
+        r = res;
 	}
 
     void build(vector<int> &v) {  // build the tree
@@ -45,7 +45,7 @@ public:
         for (t[p += n].ans = value; p >>= 1; ) combine(t[p<<1], t[p<<1|1], t[p]);
     }
 
-    int query(int l, int r) {  // sum on interval [l, r)
+    e query(int l, int r) {  // sum on interval [l, r)
         e ansl, ansr;
         ansl.sz = ansr.sz = 0;
         for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
@@ -53,7 +53,7 @@ public:
             if (r&1) combine_right(t[--r], ansr);
         }
         combine_left(ansl, ansr);
-        return ansl.ans;
+        return ansl;
     }
 
     segtree(int n):n(n),t(){
