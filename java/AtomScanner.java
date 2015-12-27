@@ -57,6 +57,10 @@ class AtomScanner {
 
     int nextInt() {
         moveNext();
+        if (!end && buf[it] == '-') {
+            it++;
+            return -nextInt();
+        }
         int result = 0;
         while (!end) {
             int l = it;
@@ -71,6 +75,10 @@ class AtomScanner {
     }
     long nextLong() {
         moveNext();
+        if (!end && buf[it] == '-') {
+            it++;
+            return -nextLong();
+        }
         long result = 0;
         while (!end) {
             int l = it;
