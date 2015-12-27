@@ -1,24 +1,24 @@
 class segtree{
 struct e {
-	int a, b;
+    int a, b;
 };
 
 public:
     int n;  // array size
     vector<e> t;
 
-	const e null_e = {-1000000000, -1000000000};
+    const e null_e = {-1000000000, -1000000000};
 
-	e combine(e l, e r) {
-		return (l.a > r.a) ? l : r;
-	}
+    e combine(e l, e r) {
+        return (l.a > r.a) ? l : r;
+    }
 
     void build(vector<e> &v) {  // build the tree
         for (int i = n; i < 2 * n; i++) t[i] = v[i - n];
         for (int i = n - 1; i > 0; --i) t[i] = combine(t[i<<1], t[i<<1|1]);
     }
-	
-	void modify(int p, e value) {  // set value at position p
+
+    void modify(int p, e value) {  // set value at position p
         for (t[p += n] = value; p >>= 1; ) t[p] = combine(t[p<<1], t[p<<1|1]);
     }
 

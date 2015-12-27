@@ -10,7 +10,7 @@ public:
         for (int i = n - 1; i > 0; --i) t[i] = max(t[i<<1], t[i<<1|1]);
     }
 
-	void apply(int p, int value) {
+    void apply(int p, int value) {
         t[p] += value;
         if (p < n) d[p] += value;
     }

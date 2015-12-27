@@ -4,7 +4,7 @@ public:
     vector<int> t;
 
     void build(vector<int> &v) {  // build the tree
-		for (int i = n; i < 2 * n; i++) t[i] = v[i - n];
+        for (int i = n; i < 2 * n; i++) t[i] = v[i - n];
         for (int i = n - 1; i > 0; --i) t[i] = t[i<<1] + t[i<<1|1];
     }
 

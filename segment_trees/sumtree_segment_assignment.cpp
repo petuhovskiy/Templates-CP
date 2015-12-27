@@ -20,7 +20,7 @@ public:
         if (p < n) d[p] = value;
     }
 
-	void resolve(int l, int r) {
+    void resolve(int l, int r) {
         int k = 2;
         for (l += n, r += n-1; l > 1; k <<= 1) {
             l >>= 1, r >>= 1;
