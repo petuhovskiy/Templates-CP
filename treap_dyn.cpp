@@ -40,10 +40,10 @@ public:
         }
         if (t[t[v].l].k + 1 <= key) {
             l = v;
-            split(t[v].r, t[l].r, r, key - t[t[v].l].k - 1);
+            split(t[v].r, t[v].r, r, key - t[t[v].l].k - 1);
         } else {
             r = v;
-            split(t[v].l, l, t[r].l, key);
+            split(t[v].l, l, t[v].l, key);
         }
         cnt(l);
         cnt(r);
