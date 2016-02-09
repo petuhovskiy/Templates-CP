@@ -1,9 +1,11 @@
 struct e {
     int sz;
     int ans;
+    int mx;
 
-    e(): sz(0), ans(0) {}
-    e(int x): ans(x), sz(1) {}
+    e(): sz(0), ans(0), mx(0) {}
+    e(int x): ans(x), sz(1), mx(x) {}
+    e(int sz, int ans, int mx): sz(sz), ans(ans), mx(mx) {}
 };
 
 class segtree{
@@ -17,7 +19,7 @@ public:
     e combine(e l, e r) {
         if (l.sz == 0) return r;
         if (r.sz == 0) return l;
-        return {l.sz + r.sz, l.ans + r.ans};
+        return e(l.sz + r.sz, l.ans + r.ans, max(l.mx, r.mx));
     }
 
     void build(vector<int> &v) {  // build the tree
@@ -29,12 +31,14 @@ public:
 
     void apply(int p, int value) {
         t[p].ans += t[p].sz * value;
+        t[p].mx += value;
         if (p < n) d[p] += value;
     }
 
     void calc(int p) {
         t[p] = combine(t[p<<1], t[p<<1|1]);
         t[p].ans += t[p].sz * d[p];
+        t[p].mx += d[p];
     }
 
     void resolve(int v) {
@@ -42,13 +46,15 @@ public:
     }
 
     void push(int v) {
-        for (v += n, s = h; s > 0; s--)
+        v += n;
+        for (int s = h; s > 0; s--) {
             int i = v >> s;
             if (d[i] != 0) {
                 apply(i<<1, d[i]);
                 apply(i<<1|1, d[i]);
                 d[i] = 0;
             }
+        }
     }
 
     void modify(int l, int r, int value) {
@@ -63,7 +69,7 @@ public:
         resolve(r0 - 1);
     }
 
-    void query(int l, int r) {  // sum on interval [l, r)
+    e query(int l, int r) {  // sum on interval [l, r)
         push(l);
         push(r - 1);
         e ansl, ansr;
@@ -76,7 +82,7 @@ public:
 
     segtree(int n):n(n),t(){
         h = 32 - __builtin_clz(n);
-        t.resize(n << 1);
-        d.resize(n, 0);
+        t.assign(n << 1, 0);
+        d.assign(n, 0);
     }
 };
