@@ -1,4 +1,11 @@
-class AtomScanner {
+package com.petukhovsky.solve.lib;
+
+import java.io.*;
+
+/**
+ * Created by petuh on 1/30/2016.
+ */
+public class FastScanner {
 
     final static int BUFFER_SIZE = 65536;
 
@@ -36,13 +43,13 @@ class AtomScanner {
         }
     }
 
-    char nextChar() {
+    public char nextChar() {
+        moveNext();
         if (end) throw new NullPointerException("End was reached");
-        ensureBuffer();
         return buf[it++];
     }
 
-    String next() {
+    public String next() {
         moveNext();
         StringBuilder sb = new StringBuilder();
         while (!end) {
@@ -55,11 +62,15 @@ class AtomScanner {
         return sb.toString();
     }
 
-    int nextInt() {
+    public int nextInt() {
         moveNext();
-        if (!end && buf[it] == '-') {
+        if (buf[it] == '-') {
             it++;
             return -nextInt();
+        }
+        if (buf[it] == '+') {
+            it++;
+            return nextInt();
         }
         int result = 0;
         while (!end) {
@@ -73,11 +84,16 @@ class AtomScanner {
         }
         return result;
     }
-    long nextLong() {
+
+    public long nextLong() {
         moveNext();
-        if (!end && buf[it] == '-') {
+        if (buf[it] == '-') {
             it++;
             return -nextLong();
+        }
+        if (buf[it] == '+') {
+            it++;
+            return nextLong();
         }
         long result = 0;
         while (!end) {
@@ -92,7 +108,7 @@ class AtomScanner {
         return result;
     }
 
-    AtomScanner(String file) {
+    public FastScanner(String file) {
         try {
             br = new BufferedReader(new FileReader(file), BUFFER_SIZE);
         } catch (FileNotFoundException e) {
@@ -100,7 +116,7 @@ class AtomScanner {
         }
     }
 
-    AtomScanner(InputStream is) {
+    public FastScanner(InputStream is) {
         br = new BufferedReader(new InputStreamReader(is), BUFFER_SIZE);
     }
 
@@ -111,4 +127,30 @@ class AtomScanner {
             e.printStackTrace();
         }
     }
+
+    public double nextDouble() {
+        return Double.parseDouble(next());
+    }
+
+    public String nextLine() {
+        ensureBuffer();
+        if (end) return null;
+        StringBuilder sb = new StringBuilder();
+        while (!end) {
+            int l = it;
+            while (++it < len && buf[it] != '\n');
+            sb.append(buf, l, it - l);
+            ensureBuffer();
+            if (buf[it] == '\n') break;
+        }
+        it++;
+        return sb.toString();
+    }
+
+    public int[] readIntArray(int count) {
+        int[] arr = new int[count];
+        for (int i = 0; i < count; i++) arr[i] = nextInt();
+        return arr;
+    }
 }
+
