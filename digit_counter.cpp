@@ -1,7 +1,6 @@
-long long cnt[10];
-
-void count(long long r) {
-    if (r == 0) return;
+vector<long long> count(long long r) {
+    vector<long long> cnt(10, 0);
+    if (r == 0) return cnt;
     long long tmp = r;
     vector<int> v;
     while (tmp > 0) v.pb(tmp % 10), tmp /= 10;
@@ -17,4 +16,5 @@ void count(long long r) {
         rc *= 10;
         lc /= 10;
     }
+    return cnt;
 }
