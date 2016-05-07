@@ -7,12 +7,12 @@ struct segset {
     T cnt = 0;
 
     void erase(Itr it) {
-        cnt -= it->S - it->F + 1;
+        cnt -= it->second - it->first + 1;
         s.erase(it);
     }
 
     void insert(T l, T r) {
-        s.insert(mp(l, r));
+        s.insert(make_pair(l, r));
         cnt += r - l + 1;
     }
 
@@ -21,15 +21,15 @@ struct segset {
             insert(l, r);
             return;
         }
-        Itr q, f = q = s.lower_bound(mp(l, l - 1));
-        if (f != s.begin() && (--f)->S >= l - 1) {
-            if (f->S >= r) return;
-            l = f->F;
+        Itr q, f = q = s.lower_bound(make_pair(l, l - 1));
+        if (f != s.begin() && (--f)->second >= l - 1) {
+            if (f->second >= r) return;
+            l = f->first;
             erase(f);
         }
-        while (q != s.end() && q->F <= r + 1)
-            if (q->S > r) {
-                r = q->S;
+        while (q != s.end() && q->first <= r + 1)
+            if (q->second > r) {
+                r = q->second;
                 erase(q);
                 break;
             } else erase(q++);
@@ -38,19 +38,19 @@ struct segset {
 
     void del(T l, T r) {
         if (s.empty()) return;
-        Itr q, f = q = s.lower_bound(mp(l, l - 1));
-        if (f != s.begin() && (--f)->S >= l) {
-            insert(f->F, l - 1);
-            if (f->S > r) {
-                insert(r + 1, f->S);
+        Itr q, f = q = s.lower_bound(make_pair(l, l - 1));
+        if (f != s.begin() && (--f)->second >= l) {
+            insert(f->first, l - 1);
+            if (f->second > r) {
+                insert(r + 1, f->second);
                 erase(f);
                 return;
             }
             erase(f);
         }
-        while (q != s.end() && q->F <= r)
-            if (r <= q->S) {
-                if (r + 1 <= q->S) insert(r + 1, q->S);
+        while (q != s.end() && q->first <= r)
+            if (r <= q->second) {
+                if (r + 1 <= q->second) insert(r + 1, q->second);
                 erase(q);
                 break;
             } else erase(q++);
@@ -58,7 +58,7 @@ struct segset {
 
     void print() {
         for(Itr i = s.begin(); i != s.end(); i++) {
-            cout << "(" << i->F << "; " << i->S << ") ";
+            cout << "(" << i->first << "; " << i->second << ") ";
         }
         cout << endl;
     }
