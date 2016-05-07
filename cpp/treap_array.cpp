@@ -1,19 +1,23 @@
-class treap{
+struct treap{
+
     struct item{
         int x, y, l, r, k;
-    };
-private:
-    vector<item> t;
-public:
-    void resize(int num) {
-        t.resize(num);
-    }
 
-    void init(int v, int x) {
-        t[v].x = x;
-        t[v].y = rand();
-        t[v].l = t[v].r = 0;
-        t[v].k = !!v;
+        int rnd() {
+            return (rand() << 16) | rand();
+        }
+
+        item(int x, int k): x(x), y(rnd()), k(k), l(0), r(0) {}
+        item() {}
+    };
+
+    vector<item> t;
+    int it = 1;
+
+    int add(int x) {
+        if (it >= t.size()) t.resize(it + 1);
+        t[it] = item(x, 1);
+        return it++;
     }
 
     void cnt(int v) {
@@ -50,8 +54,8 @@ public:
     }
 
     treap(int num) {
-        resize(num);
-        init(0, 0);
+        t.resize(num + 1);
+        t[0] = item(0, 0);
     }
 
     void output(int x) {
