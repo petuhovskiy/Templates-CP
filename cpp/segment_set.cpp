@@ -1,69 +1,59 @@
 template <typename T>
-class segset {
+struct segset {
 
     typedef typename set<pair<T, T> >::iterator Itr;
 
-private:
     set<pair<T, T> > s;
+    T cnt = 0;
 
-public:
-    void add(T l, T r) {
-        if (l > r) return;
-        Itr fi = s.lower_bound(mp(l, l - 1));
-        Itr ir = fi;
-        bool do_left = false;
-        if (fi != s.begin()) {
-            fi--;
-            do_left = true;
-        }
-        Itr tmp;
-        while (ir != s.end() && ir->F <= r + 1) {
-            if (ir->S > r) {
-                r = ir->S;
-                s.erase(ir);
-                break;
-            }
-            tmp = ir;
-            tmp++;
-            s.erase(ir);
-            ir = tmp;
-        }
-        if (do_left && fi->S >= l-1) {
-            l = fi->F;
-            r = max(r, fi->S);
-            s.erase(fi);
-        }
+    void erase(Itr it) {
+        cnt -= it->S - it->F + 1;
+        s.erase(it);
+    }
+
+    void insert(T l, T r) {
         s.insert(mp(l, r));
+        cnt += r - l + 1;
+    }
+
+    void add(T l, T r) {
+        if (s.empty()) {
+            insert(l, r);
+            return;
+        }
+        Itr q, f = q = s.lower_bound(mp(l, l - 1));
+        if (f != s.begin() && (--f)->S >= l - 1) {
+            if (f->S >= r) return;
+            l = f->F;
+            erase(f);
+        }
+        while (q != s.end() && q->F <= r + 1)
+            if (q->S > r) {
+                r = q->S;
+                erase(q);
+                break;
+            } else erase(q++);
+        insert(l, r);
     }
 
     void del(T l, T r) {
-        if (l > r) return;
-        Itr fi = s.lower_bound(mp(l, l - 1));
-        Itr ir = fi;
-        bool do_left = false;
-        if (fi != s.begin()) {
-            fi--;
-            do_left = true;
+        if (s.empty()) return;
+        Itr q, f = q = s.lower_bound(mp(l, l - 1));
+        if (f != s.begin() && (--f)->S >= l) {
+            insert(f->F, l - 1);
+            if (f->S > r) {
+                insert(r + 1, f->S);
+                erase(f);
+                return;
+            }
+            erase(f);
         }
-        Itr tmp;
-        while (ir != s.end() && ir->F <= r) {
-            if (r <= ir->S) {
-                s.insert(mp(r + 1, ir->S));
-                s.erase(ir);
+        while (q != s.end() && q->F <= r)
+            if (r <= q->S) {
+                if (r + 1 <= q->S) insert(r + 1, q->S);
+                erase(q);
                 break;
-            }
-            tmp = ir;
-            tmp++;
-            s.erase(ir);
-            ir = tmp;
-        }
-        if (do_left && fi->S >= l) {
-            s.insert(mp(fi->F, l - 1));
-            if (fi->S > r) {
-                s.insert(mp(r + 1, fi->S));
-            }
-            s.erase(fi);
-        }
+            } else erase(q++);
     }
 
     void print() {
@@ -73,7 +63,11 @@ public:
         cout << endl;
     }
 
-    set<pair<T, T> > set() {
-        return s;
-    };
+    T length() {
+        return cnt;
+    }
+
+    int size() {
+        return s.size();
+    }
 };
