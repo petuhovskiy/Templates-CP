@@ -48,7 +48,7 @@ public:
 
     segtree(int n) {
         this->n = 1<<(32 - __builtin_clz(n - 1));
-        roots.pb(new e());
+        roots.push_back(new e());
         init(roots[0], 32 - __builtin_clz(this->n));
     }
 
@@ -81,6 +81,6 @@ public:
     }
 
     void modify(int x, int y) {
-        roots.pb(modify(roots[roots.size() - 1], 1, n, x, y));
+        roots.push_back(modify(roots[roots.size() - 1], 1, n, x, y));
     }
 };

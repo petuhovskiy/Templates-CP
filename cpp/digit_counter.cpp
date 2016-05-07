@@ -3,7 +3,7 @@ vector<long long> count(long long r) {
     if (r == 0) return cnt;
     long long tmp = r;
     vector<int> v;
-    while (tmp > 0) v.pb(tmp % 10), tmp /= 10;
+    while (tmp > 0) v.push_back(tmp % 10), tmp /= 10;
     long long rc = 1;
     long long lc = r / 10;
     long long rr = 0;
