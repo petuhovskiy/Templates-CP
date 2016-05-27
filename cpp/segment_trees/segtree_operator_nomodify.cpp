@@ -1,13 +1,20 @@
 struct e {
     int sz;
-    long long ans;
+    int pos;
+    int mn;
 
     e combine(e l, e r) {
         if (l.sz == 0) return r;
         if (r.sz == 0) return l;
         e res;
         res.sz = l.sz + r.sz;
-        res.ans = l.ans + r.ans;
+        if (l.mn < r.mn) {
+            res.pos = l.pos;
+            res.mn = l.mn;
+        } else {
+            res.pos = r.pos;
+            res.mn = r.mn;
+        }
         return res;
     }
 
@@ -16,6 +23,7 @@ struct e {
     }
 
     e(): sz(0), ans(0) {}
+    e(int x, int y): sz(1), pos(y), mn(x) {}
 };
 
 class segtree{
@@ -26,7 +34,7 @@ public:
 
     void build(vector<int> &v) {  // build the tree
         for (int i = n; i < 2 * n; i++) {
-            t[i] = e(v[i - n]);
+            t[i] = e(v[i - n], i - n);
         }
         for (int i = n - 1; i > 0; --i) t[i] = t[i<<1] + t[i<<1|1];
     }
