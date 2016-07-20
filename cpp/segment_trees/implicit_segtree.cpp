@@ -1,3 +1,7 @@
+/**
+    @author https://github.com/Jyree
+*/
+
 class segTree {
 public:
     struct item {
