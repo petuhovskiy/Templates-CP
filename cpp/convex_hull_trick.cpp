@@ -1,3 +1,7 @@
+/**
+    @author http://codeforces.com/profile/Ferathorn
+*/
+
 template <typename T>
 struct convex_hull{
 
