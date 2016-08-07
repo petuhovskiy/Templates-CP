@@ -3,15 +3,20 @@ struct varray{
 
     T dl;
     int n;
-    T *a;
-    int *v;
+    vector<T> a;
+    vector<int> v;
     int cur;
 
-    void nextVersion() {
+    inline void fill() {
         cur++;
     }
 
-    T& operator[](int pos) {
+    inline void fill(T d) {
+        dl = d;
+        cur++;
+    }
+
+    inline T& operator[](int pos) {
         if (v[pos] != cur) {
             v[pos] = cur;
             a[pos] = dl;
@@ -19,13 +24,5 @@ struct varray{
         return a[pos];
     }
 
-    varray(int n, T dl): dl(dl), n(n), cur(0) {
-        a = new T[n];
-        v = new int[n];
-        for (int i = 0; i < n; i++) {
-            v[i] = 0;
-            a[i] = dl;
-        }
-        cur = 0;
-    }
+    varray(int n, T dl): dl(dl), n(n), cur(0), a(n, dl), v(n, 0) {}
 };
