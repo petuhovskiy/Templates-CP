@@ -1,16 +1,16 @@
-class segtree{
-public:
-    int n;  // array size
-    vector<int> t;
-    vector<int> d;
+template<typename T>
+struct segtree{
+    int n;
+    vector<T> t;
+    vector<T> d;
     int h;
 
-    void build(vector<int> &v) {  // build the tree
+    void build(vector<T> &v) {
         for (int i = n; i < 2 * n; i++) t[i] = v[i - n];
         for (int i = n - 1; i > 0; --i) t[i] = max(t[i<<1], t[i<<1|1]);
     }
 
-    void apply(int p, int value) {
+    void apply(int p, T value) {
         t[p] += value;
         if (p < n) d[p] += value;
     }
@@ -30,32 +30,28 @@ public:
         }
     }
 
-    void inc(int l, int r, int value) {
+    void inc(int l, int r, T value) {
         l += n, r += n;
         int l0 = l, r0 = r;
         for (; l < r; l >>= 1, r >>= 1) {
-            if (l&1) apply(l++, value);
-            if (r&1) apply(--r, value);
+            if (l & 1) apply(l++, value);
+            if (r & 1) apply(--r, value);
         }
         recalc(l0);
         recalc(r0 - 1);
     }
 
-    int query(int l, int r) {
+    T query(int l, int r) {
         l += n, r += n;
         push(l);
         push(r - 1);
-        int res = -2e9;
+        T res = numeric_limits<T>::min();
         for (; l < r; l >>= 1, r >>= 1) {
-            if (l&1) res = max(res, t[l++]);
-            if (r&1) res = max(t[--r], res);
+            if (l & 1) res = max(res, t[l++]);
+            if (r & 1) res = max(t[--r], res);
         }
         return res;
     }
 
-    segtree(int n):n(n),t(){
-        h = 32 - __builtin_clz(n);
-        t.resize(n << 1, 0);
-        d.resize(n << 1, 0);
-    }
+    segtree(int n): n(n), t(n << 1, 0), h(32 - __builtin_clz(n)), d(n, 0) {}
 };
