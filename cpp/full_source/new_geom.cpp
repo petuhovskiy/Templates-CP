@@ -271,6 +271,14 @@ segment intersect(circle c, line l) {
 	return segment(point(ans.F, y), point(ans.S, y));
 }
 
+vector<point> intersect(circle c, segment s) {
+	segment t = intersect(c, s.toLine());
+	vector<point> v;
+	if (s.inBox(t.a)) v.pb(t.a);
+	if (!(t.b == t.a) && s.inBox(t.b)) v.pb(t.b);
+	return v;
+}
+
 segment intersect (circle c1, circle c2) {
 	return intersect(c1, line(-2 * c2.center.x, -2 * c2.center.y,
 							 sq(c2.center.x) + sq(c2.center.y) + sq(c1.radius) - sq(c2.radius)));
@@ -278,7 +286,6 @@ segment intersect (circle c1, circle c2) {
 
 //other
 namespace area {
-
 	ld of(point p1, point p2, point p3) {
 		return fabs((p2 - p1) * (p3 - p1)) / 2;
 	}
@@ -372,6 +379,18 @@ namespace convex_hull {
 }
 
 int main() {
-	//TODO: write tests
+	{//circle intersection
+		circle c(point(0, 0), 10);
+		line l1(point(0, 0), point(1, 0));
+		line l2(point(0, 0), point(0, 1));
+		segment s1 = intersect(c, l1);
+		segment s2 = intersect(c, l2);
+		point a1(10, 0), b1(-10, 0);
+		point a2(0, -10), b2(0, 10);
+		assert(a1 == s1.a || a1 == s1.b);
+		assert(b1 == s1.a || b1 == s1.b);
+		assert(a2 == s2.a || a2 == s2.b);
+		assert(b2 == s2.a || b2 == s2.b);
+	}
 	return 0;
 }
