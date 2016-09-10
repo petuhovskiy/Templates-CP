@@ -173,6 +173,10 @@ struct segment {
 		return fsign((b - a) * (p - a));
 	}
 
+	bool inBox(point p) {
+		return within(p.x, a.x, b.x) && within(p.y, a.y, b.y);
+	}
+
 	bool operator==(segment s) {
 		return a == s.a && b == s.b;
 	}
@@ -183,7 +187,7 @@ struct segment {
 };
 
 point intersect(segment s, point p) {
-	if (within(p.x, s.a.x, s.b.x) && within(p.y, s.a.y, s.b.y) && s.relationTo(p) == 0) return p;
+	if (s.inBox(p) && s.relationTo(p) == 0) return p;
 	return point();
 }
 
@@ -216,8 +220,7 @@ segment intersect2(segment x, segment y) {
 	}
 	point p = intersect(l1, l2);
 	if (p.isNull()) return segment();
-	if (within(p.x, x.a.x, x.b.x) && within(p.y, x.a.y, x.b.y)
-		&& within(p.x, y.a.x, y.b.x) && within(p.y, y.a.y, y.b.y)) return segment(p, p);
+	if (x.inBox(p) && y.inBox(p)) return segment(p, p);
 	return segment();
 }
 
