@@ -197,7 +197,7 @@ ld operator^(segment s, point p) {
 	return x ^ p;
 }
 
-segment intersect2(segment x, segment y) {
+segment intersect(segment x, segment y) {
 	if (x.a == x.b) {
 		if (y.a == y.b) {
 			return x == y ? x : segment();
@@ -205,7 +205,7 @@ segment intersect2(segment x, segment y) {
 		point p = intersect(y, x.a);
 		return segment(p, p);
 	}
-	if (y.a == y.b) return intersect2(y, x);
+	if (y.a == y.b) return intersect(y, x);
 	line l1 = x.toLine();
 	line l2 = y.toLine();
 	if (l1 == l2) {
