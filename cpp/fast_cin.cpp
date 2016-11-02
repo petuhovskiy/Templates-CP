@@ -1,10 +1,12 @@
 struct IN{} in;
+#define cin in
 
 inline bool delim(char &c) {
     return c == ' ' || c == '\n' || c == '\r';
 }
 
-inline IN& operator>>(IN& t, int& a) {
+template<typename T>
+inline IN& operator>>(IN& t, T& a) {
     char buf;
     a = 0;
     while (delim(buf = getchar()));
@@ -14,10 +16,24 @@ inline IN& operator>>(IN& t, int& a) {
         return t;
     }
     while (true){
-        a = a * 10 + buf - '0';
+        a *= 10;
+        a += buf - '0';
         if (delim(buf = getchar())) break;
     }
     return t;
 }
 
-#define cin in
+inline IN& operator>>(IN& t, std::string& s) {
+    char buf;
+    s.clear();
+    while (delim(buf = getchar()));
+    do{
+        s += buf;
+    } while (!delim(buf = getchar()));
+    return t;
+}
+
+inline IN& operator>>(IN& t, char& c) {
+    while (delim(c = getchar()));
+    return t;
+}
