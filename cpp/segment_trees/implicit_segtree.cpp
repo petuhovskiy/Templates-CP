@@ -1,5 +1,5 @@
 /**
-    @author https://github.com/Jyree
+    @author https://github.com/StarOrpheus
 */
 
 class segTree {
