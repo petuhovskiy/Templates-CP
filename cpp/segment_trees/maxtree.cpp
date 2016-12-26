@@ -24,4 +24,7 @@ struct segtree{
     }
 
     segtree(int n, T def = 0):n(n),t(n << 1, def) {}
+    segtree(vector<T> &v): n(v.size()), t(n<<1) {
+        build(v);
+    }
 };
