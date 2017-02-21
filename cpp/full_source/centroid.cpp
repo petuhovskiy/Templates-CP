@@ -17,7 +17,7 @@ int computeSize(int x, int pr = -1) {
     sz[x] = 1;
     for (int to : g[x]) {
         if (to == pr || used[to]) continue;
-        sz[x] += computeSize(to);
+        sz[x] += computeSize(to, x);
     }
     return sz[x];
 }
