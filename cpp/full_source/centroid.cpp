@@ -60,6 +60,7 @@ int main() {
 #endif // LOCAL
     int n;
     cin >> n;
+    g.resize(n+1);
     for (int i = 0; i < n - 1; i++) {
         int x, y;
         cin >> x >> y;
