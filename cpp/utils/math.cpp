@@ -36,7 +36,7 @@ using pld = pair<ld, ld>;
 
 const pld Npld = make_pair(Nld, Nld);
 
-bool isnan(pld p) {
+bool isnan(const pld& p) {
     return isnan(p.first) || isnan(p.second);
 }
 
