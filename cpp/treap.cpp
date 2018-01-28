@@ -75,7 +75,7 @@ struct treap{
                 split(v, t[x].l, t[x].r, t[x].x);
                 v = x;
             } else {
-                insert(t[x].x < t[v].x ? t[v].l : t[v].r, x);
+                insert2(t[x].x < t[v].x ? t[v].l : t[v].r, x);
             }
         } else {
             v = x;
