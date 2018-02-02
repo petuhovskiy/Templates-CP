@@ -60,7 +60,7 @@ struct segtree {
         }
     }
 
-    segtree(int n) : n(n), t(n << 1), u(n), h(32 - __builtin_clz(n)) {}
+    segtree(int n) : n(n), h(32 - __builtin_clz(n)), t(n << 1), u(n) {}
     segtree(std::vector<T> v) : segtree(v.size()) {
         std::copy(v.begin(), v.end(), t.begin() + n);
         rebuildLayers();
