@@ -54,6 +54,17 @@ namespace treap {
         }
     }
 
+    template <typename T, typename Key>
+    T* remove(T* t, const Key& x) {
+        if (!t) return t;
+        if (t->x == x) return merge(t->l, t->r);
+        if (t->x < x) {
+            return t->setR(remove(t->r, x));
+        } else {
+            return t->setL(remove(t->l, x));
+        }
+    }
+
     template <typename T, typename C>
     void walk(T* t, const C& callback) {
         if (!t) return;
