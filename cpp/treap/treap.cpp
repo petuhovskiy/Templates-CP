@@ -56,7 +56,7 @@ namespace treap {
 
     template <typename T>
     T* insertOne(T* t, T* e) {
-        if (t == nullptr) return e;
+        if (!t) return e;
         if (t->x > e->x) {
             return t->setL(insertOne(t->l, e));
         } else {
