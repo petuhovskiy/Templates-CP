@@ -73,11 +73,11 @@ namespace treap {
         callback(*t);
         walk(t->r, callback);
     }
-
-    const auto printData = [](const node& n) {
-        cout << n.data << " ";
-    };
 }
 
 using namespace treap;
 using node = Node<int>;
+
+const auto printData = [](const node& n) {
+    cout << n.data << " ";
+};
