@@ -17,8 +17,8 @@ struct Node {
 
     Node* update() {
         sum = F(x);
-        if (l) sum = F(l->x) + sum;
-        if (r) sum = sum + F(r->x);
+        if (l) sum = l->sum + sum;
+        if (r) sum = sum + r->sum;
         return this;
     }
 
