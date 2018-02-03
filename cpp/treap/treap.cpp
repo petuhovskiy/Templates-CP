@@ -54,6 +54,30 @@ namespace treap {
         }
     }
 
+    template <typename T>
+    T* insertOne(T* t, T* e) {
+        if (t == nullptr) return e;
+        if (t->x > e->x) {
+            return t->setL(insertOne(t->l, e));
+        } else {
+            return t->setR(insertOne(t->r, e));
+        }
+    }
+
+    template <typename T, typename Key>
+    size_t count(T* t, const Key& x, bool l = false, bool r = false) {
+        if (!t) return 0;
+        if (l && r) return t->sum.sz;
+        if (t->x == x) {
+            return 1 + count(t->l, x, l, true) + count(t->r, x, true, r);
+        }
+        if (t->x > x) {
+            return count(t->l, x, l, false);
+        } else {
+            return count(t->r, x, false, r);
+        }
+    }
+
     template <typename T, typename Key>
     T* remove(T* t, const Key& x) {
         if (!t) return t;

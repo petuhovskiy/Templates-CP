@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include "treap_sum.cpp"
+#include "treap.cpp"
 
 using namespace std;
 using namespace treap;
@@ -11,7 +11,7 @@ struct MultisetUnique {
     T l;
     T r;
 
-    bool empty() {
+    bool empty() const {
         return sz == 0;
     }
 
