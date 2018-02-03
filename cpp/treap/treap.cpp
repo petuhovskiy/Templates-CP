@@ -78,14 +78,19 @@ namespace treap {
         }
     }
 
-    template <typename T, typename Key>
-    T* remove(T* t, const Key& x) {
-        if (!t) return t;
-        if (t->x == x) return merge(t->l, t->r);
-        if (t->x < x) {
-            return t->setR(remove(t->r, x));
+    template <typename T>
+    T* insertOne(T* t, T* e) {
+        if (!t) return e;
+        if (e->y >= t->y) {
+            T *a, *b;
+            tie(a, b) = split(t, e->x);
+            return e->setL(a)->setR(b);
         } else {
-            return t->setL(remove(t->l, x));
+            if (t->x > e->x) {
+                return t->setL(insertOne(t->l, e));
+            } else {
+                return t->setR(insertOne(t->r, e));
+            }
         }
     }
 
