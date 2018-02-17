@@ -16,19 +16,19 @@ namespace hashes {
 
     const hesh BASE(BASE1, BASE2);
 
-    hesh operator*(hesh a, hesh b) {
+    hesh operator*(const hesh& a, const hesh& b) {
         return hesh(a.a * b.a, a.b * b.b);
     }
 
-    hesh operator/(hesh a, hesh b) {
+    hesh operator/(const hesh& a, const hesh& b) {
         return hesh(a.a / b.a, a.b / b.b);
     }
 
-    hesh operator+(hesh a, hesh b) {
+    hesh operator+(const hesh& a, const hesh& b) {
         return hesh(a.a + b.a, a.b + b.b);
     }
 
-    hesh operator-(hesh a, hesh b) {
+    hesh operator-(const hesh& a, const hesh& b) {
         return hesh(a.a - b.a, a.b - b.b);
     }
 
@@ -42,21 +42,35 @@ namespace hashes {
         return true;
     }();
 
-    hesh operator<<(hesh x, int t) {
+    hesh operator<<(const hesh& x, int t) {
         return x * st[t];
     }
 
-    hesh operator>>(hesh x, int t) {
+    hesh operator>>(const hesh& x, int t) {
         return x / st[t];
     }
 
-    bool operator<(hesh a, hesh b) {
+    bool operator<(const hesh& a, const hesh& b) {
         if (a.a.x != b.a.x) return a.a.x < b.a.x;
         return a.b.x < b.b.x;
     }
 
-    ostream& operator<<(ostream& o, hesh a) {
-        o << "{" << a.a.x << "; " << a.b.x << "}";
+    bool operator==(const hesh& a, const hesh& b) {
+        return a.a == b.a && a.b == b.b;
+    }
+
+    bool operator!=(const hesh& a, const hesh& b) {
+        return !(a == b);
+    }
+
+    ostream& operator<<(ostream& o, const hesh& a) {
+        o << "{" << a.a.x << "; " << a.b.x << ";";
+        auto t = a.a.x;
+        while (t != 0) {
+            o << static_cast<char>(t % BASE1 + 'a' - 1);
+            t /= BASE1;
+        }
+        o << "}";
         return o;
     }
 };
