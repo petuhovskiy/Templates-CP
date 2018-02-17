@@ -1,5 +1,5 @@
 /**
-    @author http://codeforces.com/profile/anta
+    original @author http://codeforces.com/profile/anta
 */
 
 template<int MOD>
@@ -38,4 +38,7 @@ struct ModInt {
 	ModInt operator-() const { ModInt t; t.x = x == 0 ? 0 : Mod - x; return t; }
 
 };
+template <int Mod>
+ostream& operator<<(ostream& out, const ModInt<Mod>& mi) { return out << mi.x; }
+
 typedef ModInt<1000000007> mint;
