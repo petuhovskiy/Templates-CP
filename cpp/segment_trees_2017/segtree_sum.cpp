@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-#include "../segtree.cpp"
+#include "segtree.cpp"
 
 
 struct update {
